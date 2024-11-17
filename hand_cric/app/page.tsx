@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { Zap } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+
 
 export default function HandCricketGame() {
   const [yourScore, setYourScore] = useState(0)
@@ -16,7 +17,10 @@ export default function HandCricketGame() {
   const [showGameChoice, setShowGameChoice] = useState(false)
   const [isFlipping, setIsFlipping] = useState(false)
   const [playerRole, setPlayerRole] = useState<'Batting' | 'Bowling' | null>(null)
-
+  const [gameOver, setGameOver] = useState(false)
+  const [winner, setWinner] = useState<'You' | 'Opponent' | null>(null)
+  const [youplayed,setyouplayerplayed] = useState(false)
+  const [oppplayed,setoppplayerplayed] = useState(false)
   const numbers = [0, 1, 2, 3, 4, 5, 6]
 
   const flipCoin = (choice: string) => {
@@ -45,6 +49,27 @@ export default function HandCricketGame() {
     setOpen(false)
     setGameStarted(true)
   }
+  const endGame = (winner: 'You' | 'Opponent') => {
+    setWinner(winner)
+    setGameOver(true)
+  }
+
+  const resetGame = () => {
+    setYourScore(0)
+    setOpponentScore(0)
+    setYourChoice(null)
+    setOpponentChoice(null)
+    setGameStarted(false)
+    setOpen(true)
+    setCoinResult(null)
+    setShowGameChoice(false)
+    setIsFlipping(false)
+    setPlayerRole(null)
+    setGameOver(false)
+    setWinner(null)
+    setyouplayerplayed(false)
+    setoppplayerplayed(false)
+  }
 
   const handleNumberSelect = (number: number) => {
     setYourChoice(number)
@@ -56,14 +81,39 @@ export default function HandCricketGame() {
         setYourScore(prevScore => prevScore + number)
       } else {
         // Out! Switch roles or end game
-        setPlayerRole('Bowling')
+        setyouplayerplayed(true)
+        console.log("setplayer cslled",youplayed)
+        if(oppplayed==false)
+        {
+          setPlayerRole('Bowling')
+          console.log("setplayerrole clled",playerRole)
+        }
+        else{
+          if (opponentScore < yourScore) {
+            endGame('You')
+          } else {
+            endGame('Opponent')
+          }
+        }
       }
     } else {
       if (number !== randomChoice) {
         setOpponentScore(prevScore => prevScore + randomChoice)
       } else {
         // Out! Switch roles or end game
+        setoppplayerplayed(true)
+        console.log("setplayer cslled",youplayed)
+        if(youplayed==false){
         setPlayerRole('Batting')
+        console.log("setplayerrole clled",playerRole)
+        }
+        else{
+          if (opponentScore < yourScore) {
+            endGame('Opponent')
+          } else {
+            endGame('You')
+          }
+        }
       }
     }
   }
@@ -86,7 +136,6 @@ export default function HandCricketGame() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <div className="grid gap-8 p-4">
-            <h1 className="text-3xl font-bold text-center italic">Tossing a Coin</h1>
             
             {!showGameChoice ? (
               <div className="space-y-6">
@@ -99,7 +148,7 @@ export default function HandCricketGame() {
                   >
                     Heads
                   </Button>
-                  <div className={`w-24 h-24 rounded-full bg-gray-200 ${isFlipping ? 'animate-spin' : ''}`} />
+                  
                   <Button
                     onClick={() => flipCoin('Tails')}
                     disabled={isFlipping}
@@ -176,6 +225,21 @@ export default function HandCricketGame() {
           </div>
         </>
       )}
+      <Dialog open={gameOver} onOpenChange={setGameOver}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">Game Over!</DialogTitle>
+            <DialogDescription className="text-xl">
+              {winner === 'You' ? 'Congratulations! You won!' : 'Sorry, you lost. Better luck next time!'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={resetGame} className="w-full mt-4">
+              Play Again
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
