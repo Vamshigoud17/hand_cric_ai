@@ -73,12 +73,32 @@ export default function HandCricketGame() {
 
   const handleNumberSelect = (number: number) => {
     setYourChoice(number)
-    const randomChoice = Math.floor(Math.random() * 6) + 1
+    const randomChoice = Math.floor(Math.random() * 6) 
     setOpponentChoice(randomChoice)
 
     if (playerRole === 'Batting') {
       if (number !== randomChoice) {
-        setYourScore(prevScore => prevScore + number)
+        if(oppplayed==false)
+        {
+          console.log("from false batting" ,yourScore,opponentScore)
+          setYourScore(prevScore => prevScore + number)
+        }
+        else
+        {
+          if(yourScore<=opponentScore)
+          {
+            console.log("from true batting" ,yourScore,opponentScore)
+            setYourScore(prevScore => prevScore + number)
+          }
+          else{
+            if (opponentScore < yourScore) {
+              endGame('You')
+            } else {
+              endGame('Opponent')
+            }
+          }
+          
+        }
       } else {
         // Out! Switch roles or end game
         setyouplayerplayed(true)
@@ -97,9 +117,29 @@ export default function HandCricketGame() {
         }
       }
     } else {
-      if (number !== randomChoice) {
-        setOpponentScore(prevScore => prevScore + randomChoice)
-      } else {
+      if (number !== randomChoice) 
+      {
+        if(youplayed==false)
+          {
+            console.log("from bowling false" ,yourScore,opponentScore)
+            setOpponentScore(prevScore => prevScore + number)
+          }
+          else{
+            if(opponentScore<=yourScore)
+            {
+              console.log("from  bowling true" ,yourScore,opponentScore)
+              setOpponentScore(prevScore => prevScore + number)
+            }
+            else{
+              if (opponentScore < yourScore) {
+                endGame('Opponent')
+              } else {
+                endGame('You')
+              }
+            }
+          }
+      } 
+        else {
         // Out! Switch roles or end game
         setoppplayerplayed(true)
         console.log("setplayer cslled",youplayed)
