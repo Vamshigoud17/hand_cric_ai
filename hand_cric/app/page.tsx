@@ -80,14 +80,14 @@ export default function HandCricketGame() {
       if (number !== randomChoice) {
         if(oppplayed==false)
         {
-          console.log("from false batting" ,yourScore,opponentScore)
+          console.log("from false batting" ,yourScore,opponentScore,number,randomChoice)
           setYourScore(prevScore => prevScore + number)
         }
         else
         {
           if(yourScore<=opponentScore)
           {
-            console.log("from true batting" ,yourScore,opponentScore)
+            console.log("from true batting" ,yourScore,opponentScore,number,randomChoice)
             setYourScore(prevScore => prevScore + number)
           }
           else{
@@ -102,6 +102,7 @@ export default function HandCricketGame() {
       } else {
         // Out! Switch roles or end game
         setyouplayerplayed(true)
+        console.log("from true batting out" ,yourScore,opponentScore,number,randomChoice)
         console.log("setplayer cslled",youplayed)
         if(oppplayed==false)
         {
@@ -121,26 +122,27 @@ export default function HandCricketGame() {
       {
         if(youplayed==false)
           {
-            console.log("from bowling false" ,yourScore,opponentScore)
-            setOpponentScore(prevScore => prevScore + number)
+            console.log("from bowling false" ,yourScore,opponentScore,number,randomChoice)
+            setOpponentScore(prevScore => prevScore + randomChoice)
           }
           else{
             if(opponentScore<=yourScore)
             {
-              console.log("from  bowling true" ,yourScore,opponentScore)
-              setOpponentScore(prevScore => prevScore + number)
+              console.log("from  bowling true" ,yourScore,opponentScore,number,randomChoice)
+              setOpponentScore(prevScore => prevScore + randomChoice)
             }
             else{
               if (opponentScore < yourScore) {
-                endGame('Opponent')
-              } else {
                 endGame('You')
+              } else {
+                endGame('Opponent')
               }
             }
           }
       } 
         else {
         // Out! Switch roles or end game
+        console.log("from  bowling true out" ,yourScore,opponentScore,number,randomChoice)
         setoppplayerplayed(true)
         console.log("setplayer cslled",youplayed)
         if(youplayed==false){
@@ -149,9 +151,9 @@ export default function HandCricketGame() {
         }
         else{
           if (opponentScore < yourScore) {
-            endGame('Opponent')
-          } else {
             endGame('You')
+          } else {
+            endGame('Opponent')
           }
         }
       }
@@ -161,10 +163,10 @@ export default function HandCricketGame() {
   const getHandEmoji = (number: number) => {
     switch (number) {
       case 0: return '✊'
-      case 1: return '✌️'
-      case 2: return '🤟'
-      case 3: return '🖖'
-      case 4: return '🖐️'
+      case 1: return '☝️'
+      case 2: return '✌️'
+      case 3: return '🤟'
+      case 4: return '🖖'
       case 5: return '✋'
       case 6: return '👍'
       default: return '✌️'
@@ -172,7 +174,7 @@ export default function HandCricketGame() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 to-red-950">
+    <div className="min-h-screen bg-white">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <div className="grid gap-8 p-4">
@@ -242,13 +244,13 @@ export default function HandCricketGame() {
 
           <div className="flex justify-center items-center gap-20 my-20">
             <div className="text-8xl">{yourChoice ? getHandEmoji(yourChoice) : '✌️'}</div>
-            <div className="text-white">
+            <div className="text-black">
               <Zap size={64} />
             </div>
             <div className="text-8xl">{opponentChoice ? getHandEmoji(opponentChoice) : '✌️'}</div>
           </div>
 
-          <div className="text-center text-4xl font-bold text-white mb-10">
+          <div className="text-center text-4xl font-bold text-black mb-10">
             <h2 className="italic tracking-wider">Select a Number</h2>
           </div>
 
